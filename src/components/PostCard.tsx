@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuthor } from '@/hooks/useAuthor';
 import { genUserName } from '@/lib/genUserName';
 import { NoteContent } from '@/components/NoteContent';
+import { MediaPreview } from '@/components/MediaPreview';
 import { formatDistanceToNow } from 'date-fns';
 import { Heart, MessageCircle, Repeat2, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -119,11 +120,14 @@ export function PostCard({ event, isReply = false }: PostCardProps) {
       </CardHeader>
 
       <CardContent className="pb-3">
-        <div className="whitespace-pre-wrap break-words mb-4">
+        <div className="whitespace-pre-wrap break-words">
           <NoteContent event={event} className="text-base" />
         </div>
 
-        <div className="flex items-center justify-between max-w-md">
+        {/* Media Preview */}
+        <MediaPreview event={event} />
+
+        <div className="flex items-center justify-between max-w-md mt-4">
           <Button
             variant="ghost"
             size="sm"
