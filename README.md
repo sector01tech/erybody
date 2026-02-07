@@ -8,7 +8,8 @@ A modern Nostr microblogging platform with PWA support and Nostr Wallet Connect 
 - 📱 **Progressive Web App** - Install as a mobile or desktop app
 - ⚡ **Lightning Payments** - Zap posts using Nostr Wallet Connect (NWC)
 - 🔐 **Encrypted Messaging** - Direct messages with NIP-04 and NIP-17 support
-- 🌙 **Dark Mode** - Beautiful dark theme by default
+- 🔑 **Multiple Login Options** - Extension (NIP-07), secret key, or remote signer (bunker)
+- 🌙 **Dark Mode** - Beautiful pure black theme with orange accents
 - 📡 **Relay Management** - Customizable relay connections with NIP-65
 - 🎨 **Modern UI** - Built with shadcn/ui and TailwindCSS
 

@@ -121,7 +121,14 @@ export function PostCard({ event }: PostCardProps) {
             <span className="text-sm">Like</span>
           </Button>
 
-          <ZapButton event={event} />
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground hover:text-primary hover:bg-primary/10"
+            asChild
+          >
+            <ZapButton target={event as any} className="flex items-center gap-2" showCount={true} />
+          </Button>
         </div>
       </CardContent>
     </Card>
