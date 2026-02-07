@@ -1,6 +1,9 @@
 import { useSeoMeta } from "@unhead/react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
+import { Layout } from "@/components/Layout";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const NotFound = () => {
   const location = useLocation();
@@ -18,15 +21,22 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-900">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-gray-100">404</h1>
-        <p className="text-xl text-gray-600 dark:text-gray-400 mb-4">Oops! Page not found</p>
-        <a href="/" className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 underline">
-          Return to Home
-        </a>
+    <Layout>
+      <div className="min-h-screen flex items-center justify-center p-4">
+        <Card className="max-w-md w-full">
+          <CardContent className="pt-6 text-center space-y-4">
+            <h1 className="text-6xl font-bold text-primary">404</h1>
+            <h2 className="text-2xl font-semibold">Page not found</h2>
+            <p className="text-muted-foreground">
+              The page you're looking for doesn't exist or has been moved.
+            </p>
+            <Button asChild className="mt-4">
+              <Link to="/">Return to Home</Link>
+            </Button>
+          </CardContent>
+        </Card>
       </div>
-    </div>
+    </Layout>
   );
 };
 
