@@ -49,6 +49,10 @@ npm run test
 
 Post short notes to the Nostr network and view posts from other users in your feed.
 
+### Explore
+
+Discover trending posts and active people on Nostr.
+
 ### Search
 
 Search for posts and people on Nostr with real-time results for both content and profiles.
@@ -56,6 +60,18 @@ Search for posts and people on Nostr with real-time results for both content and
 ### Live Streams
 
 Watch live streams on Nostr with support for NIP-53 Live Activities. See who's streaming, view participant counts, and join live broadcasts.
+
+### Notifications
+
+Get notified when people mention you, reply to your posts, react, repost, or zap your content.
+
+### Bookmarks
+
+Save posts for later using NIP-51 bookmark lists.
+
+### Custom Emoticons
+
+Add custom emoji to your posts using NIP-30. Create and manage your own emoji library or use defaults.
 
 ### Direct Messaging
 
@@ -91,9 +107,11 @@ Install erybody as a Progressive Web App on your device for a native app experie
 - **NIP-07** - Browser extension signer
 - **NIP-17** - Private Direct Messages
 - **NIP-19** - bech32-encoded entities
+- **NIP-30** - Custom Emoji
 - **NIP-46** - Nostr Remote Signing (bunker)
 - **NIP-47** - Nostr Wallet Connect
 - **NIP-50** - Search Capability
+- **NIP-51** - Lists (Bookmarks)
 - **NIP-53** - Live Activities
 - **NIP-57** - Lightning Zaps
 - **NIP-65** - Relay List Metadata

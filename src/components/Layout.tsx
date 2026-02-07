@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, User, Wallet, Settings, MessageSquare, Search, Radio } from 'lucide-react';
+import { Home, User, Wallet, Settings, MessageSquare, Search, Radio, Bell, Bookmark, Compass } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LoginArea } from '@/components/auth/LoginArea';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
@@ -11,8 +11,11 @@ interface LayoutProps {
 
 const navItems = [
   { name: 'Home', href: '/', icon: Home },
+  { name: 'Explore', href: '/explore', icon: Compass },
   { name: 'Search', href: '/search', icon: Search },
   { name: 'Live', href: '/live', icon: Radio },
+  { name: 'Notifications', href: '/notifications', icon: Bell },
+  { name: 'Bookmarks', href: '/bookmarks', icon: Bookmark },
   { name: 'Messages', href: '/messages', icon: MessageSquare },
   { name: 'Profile', href: '/profile', icon: User },
   { name: 'Wallet', href: '/wallet', icon: Wallet },

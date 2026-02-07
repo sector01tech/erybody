@@ -10,6 +10,7 @@ import { genUserName } from '@/lib/genUserName';
 import { useToast } from '@/hooks/useToast';
 import { Image, Loader2 } from 'lucide-react';
 import { useUploadFile } from '@/hooks/useUploadFile';
+import { EmojiPicker } from '@/components/EmojiPicker';
 
 export function ComposePost() {
   const { user } = useCurrentUser();
@@ -19,10 +20,22 @@ export function ComposePost() {
   const { toast } = useToast();
   const [content, setContent] = useState('');
   const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [emojiTags, setEmojiTags] = useState<Array<[string, string, string]>>([]);
 
   const metadata = author.data?.metadata;
   const displayName = metadata?.name ?? genUserName(user?.pubkey || '');
   const profileImage = metadata?.picture;
+
+  const handleEmojiSelect = (emoji: { shortcode: string; url: string }) => {
+    const emojiText = `:${emoji.shortcode}:`;
+    setContent(content + emojiText);
+    
+    // Add emoji tag if not already present
+    const emojiTag: [string, string, string] = ['emoji', emoji.shortcode, emoji.url];
+    if (!emojiTags.some(([_, sc]) => sc === emoji.shortcode)) {
+      setEmojiTags([...emojiTags, emojiTag]);
+    }
+  };
 
   const handleSubmit = () => {
     if (!content.trim() && imageUrls.length === 0) return;
@@ -35,11 +48,16 @@ export function ComposePost() {
     }
 
     createEvent(
-      { kind: 1, content: finalContent },
+      { 
+        kind: 1, 
+        content: finalContent,
+        tags: [...emojiTags],
+      },
       {
         onSuccess: () => {
           setContent('');
           setImageUrls([]);
+          setEmojiTags([]);
           toast({
             title: 'Posted!',
             description: 'Your note has been published.',
@@ -152,6 +170,7 @@ export function ComposePost() {
                     </span>
                   </Button>
                 </label>
+                <EmojiPicker onEmojiSelect={handleEmojiSelect} />
               </div>
 
               <Button
