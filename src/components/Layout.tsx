@@ -1,9 +1,11 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, User, Wallet, Settings, MessageSquare, Search, Radio, Bell, Bookmark, Compass } from 'lucide-react';
+import { Home, User, Wallet, Settings, MessageSquare, Search, Radio, Bell, Bookmark, Compass, Edit } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { LoginArea } from '@/components/auth/LoginArea';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { Button } from '@/components/ui/button';
+import { ComposePostModal } from '@/components/ComposePostModal';
 
 interface LayoutProps {
   children: ReactNode;
@@ -25,6 +27,7 @@ const navItems = [
 export function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const { user } = useCurrentUser();
+  const [isComposeOpen, setIsComposeOpen] = useState(false);
 
   return (
     <div className="flex h-screen bg-background">
@@ -59,6 +62,16 @@ export function Layout({ children }: LayoutProps) {
               </Link>
             );
           })}
+
+          {/* Post Button */}
+          <Button
+            onClick={() => setIsComposeOpen(true)}
+            className="w-full flex items-center gap-3 px-4 py-3 h-auto justify-start font-semibold"
+            disabled={!user}
+          >
+            <Edit className="w-5 h-5" />
+            <span>Post</span>
+          </Button>
         </nav>
 
         {/* Login Area */}
@@ -66,6 +79,9 @@ export function Layout({ children }: LayoutProps) {
           <LoginArea className="w-full" />
         </div>
       </aside>
+
+      {/* Compose Post Modal */}
+      <ComposePostModal open={isComposeOpen} onOpenChange={setIsComposeOpen} />
 
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto">

@@ -1,6 +1,5 @@
 import { useSeoMeta } from '@unhead/react';
 import { Layout } from '@/components/Layout';
-import { ComposePost } from '@/components/ComposePost';
 import { PostCard } from '@/components/PostCard';
 import { usePosts } from '@/hooks/usePosts';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -17,9 +16,6 @@ const Index = () => {
   return (
     <Layout>
       <div className="max-w-2xl mx-auto py-6 px-4 space-y-6">
-        {/* Compose Post */}
-        <ComposePost />
-
         {/* Feed */}
         <div className="space-y-4">
           {isLoading ? (
