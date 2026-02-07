@@ -10,17 +10,23 @@ import { Button } from '@/components/ui/button';
 import { ZapButton } from '@/components/ZapButton';
 import { useNostrPublish } from '@/hooks/useNostrPublish';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { useNoteStats } from '@/hooks/useNoteStats';
+import { NoteReplies } from '@/components/NoteReplies';
 import { nip19 } from 'nostr-tools';
 import { Link } from 'react-router-dom';
+import { useToast } from '@/hooks/useToast';
 
 interface PostCardProps {
   event: NostrEvent;
+  isReply?: boolean;
 }
 
-export function PostCard({ event }: PostCardProps) {
+export function PostCard({ event, isReply = false }: PostCardProps) {
   const author = useAuthor(event.pubkey);
   const { user } = useCurrentUser();
   const { mutate: createEvent } = useNostrPublish();
+  const { toast } = useToast();
+  const { data: stats } = useNoteStats(event);
   const metadata: NostrMetadata | undefined = author.data?.metadata;
 
   const displayName = metadata?.name ?? genUserName(event.pubkey);
@@ -43,6 +49,33 @@ export function PostCard({ event }: PostCardProps) {
         ['e', event.id],
         ['p', event.pubkey],
       ],
+    }, {
+      onSuccess: () => {
+        toast({
+          title: 'Reposted!',
+          description: 'You reposted this note.',
+        });
+      },
+    });
+  };
+
+  const handleLike = () => {
+    if (!user) return;
+    
+    createEvent({
+      kind: 7,
+      content: '+',
+      tags: [
+        ['e', event.id],
+        ['p', event.pubkey],
+      ],
+    }, {
+      onSuccess: () => {
+        toast({
+          title: 'Liked!',
+          description: 'You liked this note.',
+        });
+      },
     });
   };
 
@@ -98,7 +131,9 @@ export function PostCard({ event }: PostCardProps) {
             onClick={handleReply}
           >
             <MessageCircle className="w-4 h-4 mr-2" />
-            <span className="text-sm">Reply</span>
+            <span className="text-sm">
+              {stats?.replyCount ? stats.replyCount : 'Reply'}
+            </span>
           </Button>
 
           <Button
@@ -109,16 +144,22 @@ export function PostCard({ event }: PostCardProps) {
             disabled={!user}
           >
             <Repeat2 className="w-4 h-4 mr-2" />
-            <span className="text-sm">Repost</span>
+            <span className="text-sm">
+              {stats?.repostCount ? stats.repostCount : 'Repost'}
+            </span>
           </Button>
 
           <Button
             variant="ghost"
             size="sm"
             className="text-muted-foreground hover:text-red-500 hover:bg-red-500/10"
+            onClick={handleLike}
+            disabled={!user}
           >
             <Heart className="w-4 h-4 mr-2" />
-            <span className="text-sm">Like</span>
+            <span className="text-sm">
+              {stats?.likeCount ? stats.likeCount : 'Like'}
+            </span>
           </Button>
 
           <Button
@@ -127,9 +168,19 @@ export function PostCard({ event }: PostCardProps) {
             className="text-muted-foreground hover:text-primary hover:bg-primary/10"
             asChild
           >
-            <ZapButton target={event as any} className="flex items-center gap-2" showCount={true} />
+            <ZapButton 
+              target={event as any} 
+              className="flex items-center gap-2" 
+              showCount={true}
+              zapData={stats ? { count: stats.zaps.length, totalSats: stats.zapTotal } : undefined}
+            />
           </Button>
         </div>
+
+        {/* Show replies if not a reply itself */}
+        {!isReply && stats && stats.replyCount > 0 && (
+          <NoteReplies replies={stats.replies} replyCount={stats.replyCount} />
+        )}
       </CardContent>
     </Card>
   );
