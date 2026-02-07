@@ -5,10 +5,13 @@ import { useNostr } from '@nostrify/react';
 import { Layout } from '@/components/Layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { useAuthor } from '@/hooks/useAuthor';
 import { genUserName } from '@/lib/genUserName';
 import { PostCard } from '@/components/PostCard';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useFollows } from '@/hooks/useFollows';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 import NotFound from './NotFound';
 
 export function NIP19Page() {
@@ -49,13 +52,18 @@ export function NIP19Page() {
 
 function ProfileView({ pubkey }: { pubkey: string }) {
   const { nostr } = useNostr();
+  const { user } = useCurrentUser();
   const author = useAuthor(pubkey);
+  const { isFollowing, toggleFollow } = useFollows();
   const metadata = author.data?.metadata;
   const displayName = metadata?.name ?? genUserName(pubkey);
   const profileImage = metadata?.picture;
   const banner = metadata?.banner;
   const about = metadata?.about;
   const nip05 = metadata?.nip05;
+
+  const isOwnProfile = user?.pubkey === pubkey;
+  const following = isFollowing(pubkey);
 
   const { data: userPosts, isLoading } = useQuery({
     queryKey: ['user-posts', pubkey],
@@ -81,13 +89,22 @@ function ProfileView({ pubkey }: { pubkey: string }) {
         )}
 
         <div className="px-4 py-6 space-y-6">
-          <div className="flex items-start gap-4">
+          <div className="flex items-start justify-between">
             <Avatar className="w-24 h-24 border-4 border-background -mt-12">
               <AvatarImage src={profileImage} alt={displayName} />
               <AvatarFallback className="text-2xl">
                 {displayName[0]?.toUpperCase()}
               </AvatarFallback>
             </Avatar>
+
+            {!isOwnProfile && user && (
+              <Button
+                onClick={() => toggleFollow(pubkey)}
+                variant={following ? 'outline' : 'default'}
+              >
+                {following ? 'Unfollow' : 'Follow'}
+              </Button>
+            )}
           </div>
 
           <div className="space-y-3">

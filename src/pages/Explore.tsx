@@ -8,13 +8,18 @@ import { useQuery } from '@tanstack/react-query';
 import { PostCard } from '@/components/PostCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import { useAuthor } from '@/hooks/useAuthor';
 import { genUserName } from '@/lib/genUserName';
+import { useFollows } from '@/hooks/useFollows';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { nip19 } from 'nostr-tools';
 import { Link } from 'react-router-dom';
 
 const Explore = () => {
   const { nostr } = useNostr();
+  const { user } = useCurrentUser();
+  const { isFollowing, toggleFollow } = useFollows();
 
   useSeoMeta({
     title: 'Explore - erybody',
@@ -132,21 +137,27 @@ const Explore = () => {
                   </Card>
                 ))}
               </>
-            ) : activeProfiles && activeProfiles.length > 0 ? (
+              ) : activeProfiles && activeProfiles.length > 0 ? (
               activeProfiles.map((profile: any) => {
                 const displayName = profile.metadata.name || genUserName(profile.pubkey);
                 const npub = nip19.npubEncode(profile.pubkey);
+                const isOwnProfile = user?.pubkey === profile.pubkey;
+                const following = isFollowing(profile.pubkey);
                 
                 return (
                   <Card key={profile.pubkey} className="hover:bg-card/80 transition-colors">
                     <CardContent className="p-6">
-                      <Link to={`/${npub}`} className="flex items-center gap-4">
-                        <Avatar className="w-12 h-12">
-                          <AvatarImage src={profile.metadata.picture} alt={displayName} />
-                          <AvatarFallback>{displayName[0]?.toUpperCase()}</AvatarFallback>
-                        </Avatar>
+                      <div className="flex items-center gap-4">
+                        <Link to={`/${npub}`}>
+                          <Avatar className="w-12 h-12 cursor-pointer hover:opacity-80 transition-opacity">
+                            <AvatarImage src={profile.metadata.picture} alt={displayName} />
+                            <AvatarFallback>{displayName[0]?.toUpperCase()}</AvatarFallback>
+                          </Avatar>
+                        </Link>
                         <div className="flex-1 min-w-0">
-                          <h3 className="font-semibold truncate">{displayName}</h3>
+                          <Link to={`/${npub}`}>
+                            <h3 className="font-semibold truncate hover:underline">{displayName}</h3>
+                          </Link>
                           {profile.metadata.nip05 && (
                             <p className="text-sm text-muted-foreground truncate">
                               {profile.metadata.nip05}
@@ -158,7 +169,16 @@ const Explore = () => {
                             </p>
                           )}
                         </div>
-                      </Link>
+                        {!isOwnProfile && user && (
+                          <Button
+                            onClick={() => toggleFollow(profile.pubkey)}
+                            variant={following ? 'outline' : 'default'}
+                            size="sm"
+                          >
+                            {following ? 'Unfollow' : 'Follow'}
+                          </Button>
+                        )}
+                      </div>
                     </CardContent>
                   </Card>
                 );

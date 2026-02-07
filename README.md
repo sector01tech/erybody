@@ -69,6 +69,14 @@ Get notified when people mention you, reply to your posts, react, repost, or zap
 
 Save posts for later using NIP-51 bookmark lists.
 
+### Communities
+
+Discover and browse NIP-72 moderated communities. View community descriptions, moderators, and join discussions.
+
+### Follow System
+
+Follow and unfollow users across the platform. Follow lists sync using NIP-02 and persist across devices.
+
 ### Custom Emoticons
 
 Add custom emoji to your posts using NIP-30. Create and manage your own emoji library or use defaults.
@@ -102,6 +110,7 @@ Install erybody as a Progressive Web App on your device for a native app experie
 ## Nostr NIPs Supported
 
 - **NIP-01** - Basic protocol flow
+- **NIP-02** - Follow List
 - **NIP-04** - Encrypted Direct Messages
 - **NIP-05** - Mapping Nostr keys to DNS identifiers
 - **NIP-07** - Browser extension signer
@@ -115,6 +124,7 @@ Install erybody as a Progressive Web App on your device for a native app experie
 - **NIP-53** - Live Activities
 - **NIP-57** - Lightning Zaps
 - **NIP-65** - Relay List Metadata
+- **NIP-72** - Moderated Communities
 
 ## License
 

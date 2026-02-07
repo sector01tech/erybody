@@ -3,6 +3,7 @@ import { ScrollToTop } from "./components/ScrollToTop";
 
 import Index from "./pages/Index";
 import Explore from "./pages/Explore";
+import Communities from "./pages/Communities";
 import Search from "./pages/Search";
 import Live from "./pages/Live";
 import Notifications from "./pages/Notifications";
@@ -21,6 +22,7 @@ export function AppRouter() {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/explore" element={<Explore />} />
+        <Route path="/communities" element={<Communities />} />
         <Route path="/search" element={<Search />} />
         <Route path="/live" element={<Live />} />
         <Route path="/notifications" element={<Notifications />} />

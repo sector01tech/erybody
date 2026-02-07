@@ -3,6 +3,7 @@ import { useSeoMeta } from '@unhead/react';
 import { Layout } from '@/components/Layout';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Search as SearchIcon } from 'lucide-react';
 import { useNostr } from '@nostrify/react';
@@ -12,6 +13,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useAuthor } from '@/hooks/useAuthor';
 import { genUserName } from '@/lib/genUserName';
+import { useFollows } from '@/hooks/useFollows';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { nip19 } from 'nostr-tools';
 import { Link } from 'react-router-dom';
 
@@ -19,6 +22,8 @@ const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const { nostr } = useNostr();
+  const { user } = useCurrentUser();
+  const { isFollowing, toggleFollow } = useFollows();
 
   useSeoMeta({
     title: 'Search - erybody',
@@ -162,36 +167,51 @@ const Search = () => {
                   ))}
                 </>
               ) : profiles && profiles.length > 0 ? (
-                profiles.map((profile: any) => {
-                  const displayName = profile.metadata.name || genUserName(profile.pubkey);
-                  const npub = nip19.npubEncode(profile.pubkey);
-                  
-                  return (
-                    <Card key={profile.pubkey} className="hover:bg-card/80 transition-colors">
-                      <CardContent className="p-6">
-                        <Link to={`/${npub}`} className="flex items-center gap-4">
-                          <Avatar className="w-12 h-12">
+              profiles.map((profile: any) => {
+                const displayName = profile.metadata.name || genUserName(profile.pubkey);
+                const npub = nip19.npubEncode(profile.pubkey);
+                const isOwnProfile = user?.pubkey === profile.pubkey;
+                const following = isFollowing(profile.pubkey);
+                
+                return (
+                  <Card key={profile.pubkey} className="hover:bg-card/80 transition-colors">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4">
+                        <Link to={`/${npub}`}>
+                          <Avatar className="w-12 h-12 cursor-pointer hover:opacity-80 transition-opacity">
                             <AvatarImage src={profile.metadata.picture} alt={displayName} />
                             <AvatarFallback>{displayName[0]?.toUpperCase()}</AvatarFallback>
                           </Avatar>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold truncate">{displayName}</h3>
-                            {profile.metadata.nip05 && (
-                              <p className="text-sm text-muted-foreground truncate">
-                                {profile.metadata.nip05}
-                              </p>
-                            )}
-                            {profile.metadata.about && (
-                              <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                                {profile.metadata.about}
-                              </p>
-                            )}
-                          </div>
                         </Link>
-                      </CardContent>
-                    </Card>
-                  );
-                })
+                        <div className="flex-1 min-w-0">
+                          <Link to={`/${npub}`}>
+                            <h3 className="font-semibold truncate hover:underline">{displayName}</h3>
+                          </Link>
+                          {profile.metadata.nip05 && (
+                            <p className="text-sm text-muted-foreground truncate">
+                              {profile.metadata.nip05}
+                            </p>
+                          )}
+                          {profile.metadata.about && (
+                            <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
+                              {profile.metadata.about}
+                            </p>
+                          )}
+                        </div>
+                        {!isOwnProfile && user && (
+                          <Button
+                            onClick={() => toggleFollow(profile.pubkey)}
+                            variant={following ? 'outline' : 'default'}
+                            size="sm"
+                          >
+                            {following ? 'Unfollow' : 'Follow'}
+                          </Button>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })
               ) : (
                 <Card className="border-dashed">
                   <CardContent className="py-12 px-8 text-center">
