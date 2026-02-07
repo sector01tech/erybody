@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useNostr } from '@nostrify/react';
 import { Layout } from '@/components/Layout';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useAuthor } from '@/hooks/useAuthor';
@@ -11,7 +11,9 @@ import { genUserName } from '@/lib/genUserName';
 import { PostCard } from '@/components/PostCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useFollows } from '@/hooks/useFollows';
+import { useCommunityMembership } from '@/hooks/useCommunityMembership';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { Users } from 'lucide-react';
 import NotFound from './NotFound';
 
 export function NIP19Page() {
@@ -216,6 +218,11 @@ function AddrView({ addr }: { addr: { kind: number; pubkey: string; identifier: 
     },
   });
 
+  // If it's a community (kind 34550), show community view
+  if (addr.kind === 34550 && event) {
+    return <CommunityView community={event} />;
+  }
+
   return (
     <Layout>
       <div className="max-w-2xl mx-auto py-6 px-4">
@@ -241,6 +248,92 @@ function AddrView({ addr }: { addr: { kind: number; pubkey: string; identifier: 
             </CardContent>
           </Card>
         )}
+      </div>
+    </Layout>
+  );
+}
+
+function CommunityView({ community }: { community: any }) {
+  const { user } = useCurrentUser();
+  const { isMember, toggleMembership } = useCommunityMembership();
+  const author = useAuthor(community.pubkey);
+  const metadata = author.data?.metadata;
+
+  const dTag = community.tags.find(([name]: string[]) => name === 'd')?.[1] || '';
+  const name = community.tags.find(([name]: string[]) => name === 'name')?.[1] || dTag || 'Untitled Community';
+  const description = community.tags.find(([name]: string[]) => name === 'description')?.[1] || '';
+  const image = community.tags.find(([name]: string[]) => name === 'image')?.[1];
+  
+  const moderators = community.tags.filter(([name, _, __, role]: string[]) => name === 'p' && role === 'moderator');
+  const moderatorCount = moderators.length;
+  
+  const displayName = metadata?.name ?? genUserName(community.pubkey);
+  const npub = nip19.npubEncode(community.pubkey);
+
+  const communityATag = `34550:${community.pubkey}:${dTag}`;
+  const joined = isMember(communityATag);
+
+  return (
+    <Layout>
+      <div className="max-w-2xl mx-auto py-6 px-4 space-y-6">
+        <Card>
+          <CardHeader>
+            <div className="flex items-start gap-4">
+              <div className="w-20 h-20 bg-muted rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+                {image ? (
+                  <img 
+                    src={image} 
+                    alt={name} 
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <Users className="w-10 h-10 text-muted-foreground" />
+                )}
+              </div>
+
+              <div className="flex-1 space-y-2">
+                <CardTitle className="text-2xl">{name}</CardTitle>
+                
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <Link to={`/${npub}`} className="hover:text-foreground transition-colors">
+                    by {displayName}
+                  </Link>
+                  {moderatorCount > 0 && (
+                    <>
+                      <span>•</span>
+                      <span>{moderatorCount} {moderatorCount === 1 ? 'moderator' : 'moderators'}</span>
+                    </>
+                  )}
+                </div>
+
+                {user && (
+                  <Button
+                    onClick={() => toggleMembership(communityATag)}
+                    variant={joined ? 'outline' : 'default'}
+                    size="sm"
+                  >
+                    {joined ? 'Leave Community' : 'Join Community'}
+                  </Button>
+                )}
+              </div>
+            </div>
+          </CardHeader>
+          
+          {description && (
+            <CardContent>
+              <p className="text-muted-foreground">{description}</p>
+            </CardContent>
+          )}
+        </Card>
+
+        {/* Community posts would go here in the future */}
+        <Card className="border-dashed">
+          <CardContent className="py-12 px-8 text-center">
+            <p className="text-muted-foreground">
+              Community posts coming soon
+            </p>
+          </CardContent>
+        </Card>
       </div>
     </Layout>
   );

@@ -8,6 +8,8 @@ import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAuthor } from '@/hooks/useAuthor';
 import { genUserName } from '@/lib/genUserName';
+import { useCommunityMembership } from '@/hooks/useCommunityMembership';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { nip19 } from 'nostr-tools';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -23,6 +25,8 @@ interface CommunityEvent {
 
 const Communities = () => {
   const { nostr } = useNostr();
+  const { user } = useCurrentUser();
+  const { isMember, toggleMembership } = useCommunityMembership();
 
   useSeoMeta({
     title: 'Communities - erybody',
@@ -75,7 +79,13 @@ const Communities = () => {
             </>
           ) : communities && communities.length > 0 ? (
             communities.map((community) => (
-              <CommunityCard key={community.id} community={community} />
+              <CommunityCard 
+                key={community.id} 
+                community={community}
+                user={user}
+                isMember={isMember}
+                toggleMembership={toggleMembership}
+              />
             ))
           ) : (
             <div className="col-span-full">
@@ -95,7 +105,14 @@ const Communities = () => {
   );
 };
 
-function CommunityCard({ community }: { community: CommunityEvent }) {
+interface CommunityCardProps {
+  community: CommunityEvent;
+  user: any;
+  isMember: (aTag: string) => boolean;
+  toggleMembership: (aTag: string, relay?: string) => void;
+}
+
+function CommunityCard({ community, user, isMember, toggleMembership }: CommunityCardProps) {
   const author = useAuthor(community.pubkey);
   const metadata = author.data?.metadata;
   
@@ -114,6 +131,10 @@ function CommunityCard({ community }: { community: CommunityEvent }) {
     pubkey: community.pubkey,
     identifier: dTag,
   });
+
+  // Create the 'a' tag for this community
+  const communityATag = `34550:${community.pubkey}:${dTag}`;
+  const joined = isMember(communityATag);
 
   return (
     <Card className="hover:bg-card/80 transition-colors overflow-hidden">
@@ -160,12 +181,24 @@ function CommunityCard({ community }: { community: CommunityEvent }) {
               )}
             </div>
 
-            {/* View Button */}
-            <Button asChild variant="outline" size="sm" className="w-full mt-2">
-              <Link to={`/${naddr}`}>
-                View Community
-              </Link>
-            </Button>
+            {/* Action Buttons */}
+            <div className="flex gap-2 mt-2">
+              <Button asChild variant="outline" size="sm" className="flex-1">
+                <Link to={`/${naddr}`}>
+                  View
+                </Link>
+              </Button>
+              {user && (
+                <Button
+                  onClick={() => toggleMembership(communityATag)}
+                  variant={joined ? 'secondary' : 'default'}
+                  size="sm"
+                  className="flex-1"
+                >
+                  {joined ? 'Leave' : 'Join'}
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </CardContent>
