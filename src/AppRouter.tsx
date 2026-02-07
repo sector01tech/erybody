@@ -2,6 +2,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ScrollToTop } from "./components/ScrollToTop";
 
 import Index from "./pages/Index";
+import Search from "./pages/Search";
+import Live from "./pages/Live";
 import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
 import Wallet from "./pages/Wallet";
@@ -15,6 +17,8 @@ export function AppRouter() {
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Index />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/live" element={<Live />} />
         <Route path="/messages" element={<Messages />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/wallet" element={<Wallet />} />

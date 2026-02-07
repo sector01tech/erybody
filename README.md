@@ -49,6 +49,14 @@ npm run test
 
 Post short notes to the Nostr network and view posts from other users in your feed.
 
+### Search
+
+Search for posts and people on Nostr with real-time results for both content and profiles.
+
+### Live Streams
+
+Watch live streams on Nostr with support for NIP-53 Live Activities. See who's streaming, view participant counts, and join live broadcasts.
+
 ### Direct Messaging
 
 Send encrypted direct messages to other Nostr users using NIP-04 and NIP-17 protocols.
@@ -83,7 +91,10 @@ Install erybody as a Progressive Web App on your device for a native app experie
 - **NIP-07** - Browser extension signer
 - **NIP-17** - Private Direct Messages
 - **NIP-19** - bech32-encoded entities
+- **NIP-46** - Nostr Remote Signing (bunker)
 - **NIP-47** - Nostr Wallet Connect
+- **NIP-50** - Search Capability
+- **NIP-53** - Live Activities
 - **NIP-57** - Lightning Zaps
 - **NIP-65** - Relay List Metadata
 
