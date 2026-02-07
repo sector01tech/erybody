@@ -86,7 +86,7 @@ export function Layout({ children }: LayoutProps) {
         <ComposePostModal open={isComposeOpen} onOpenChange={setIsComposeOpen} />
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto">
+        <main className="flex-1 overflow-y-auto scrollbar-hide">
           {children}
         </main>
       </div>
