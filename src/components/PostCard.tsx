@@ -6,16 +6,18 @@ import { genUserName } from '@/lib/genUserName';
 import { NoteContent } from '@/components/NoteContent';
 import { MediaPreview } from '@/components/MediaPreview';
 import { formatDistanceToNow } from 'date-fns';
-import { Heart, MessageCircle, Repeat2, Zap } from 'lucide-react';
+import { Heart, MessageCircle, Repeat2, Zap, Bookmark, MoreHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ZapButton } from '@/components/ZapButton';
 import { useNostrPublish } from '@/hooks/useNostrPublish';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useNoteStats } from '@/hooks/useNoteStats';
+import { useBookmarks } from '@/hooks/useBookmarks';
 import { NoteReplies } from '@/components/NoteReplies';
 import { nip19 } from 'nostr-tools';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/useToast';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 
 interface PostCardProps {
   event: NostrEvent;
@@ -28,6 +30,7 @@ export function PostCard({ event, isReply = false }: PostCardProps) {
   const { mutate: createEvent } = useNostrPublish();
   const { toast } = useToast();
   const { data: stats } = useNoteStats(event);
+  const { isBookmarked, toggleBookmark } = useBookmarks();
   const metadata: NostrMetadata | undefined = author.data?.metadata;
 
   const displayName = metadata?.name ?? genUserName(event.pubkey);
@@ -85,6 +88,20 @@ export function PostCard({ event, isReply = false }: PostCardProps) {
     console.log('Reply to', event.id);
   };
 
+  const handleBookmark = () => {
+    if (!user) {
+      toast({
+        title: 'Login required',
+        description: 'Please log in to bookmark posts.',
+        variant: 'destructive',
+      });
+      return;
+    }
+    toggleBookmark(event.id, event.pubkey);
+  };
+
+  const bookmarked = isBookmarked(event.id);
+
   return (
     <Card className="hover:bg-card/80 transition-colors">
       <CardHeader className="pb-3">
@@ -116,6 +133,21 @@ export function PostCard({ event, isReply = false }: PostCardProps) {
               </Link>
             </div>
           </div>
+
+          {/* More Options Menu */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <MoreHorizontal className="w-4 h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={handleBookmark}>
+                <Bookmark className={`w-4 h-4 mr-2 ${bookmarked ? 'fill-current' : ''}`} />
+                {bookmarked ? 'Remove Bookmark' : 'Bookmark'}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </CardHeader>
 
