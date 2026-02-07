@@ -33,7 +33,7 @@ export function Layout({ children }: LayoutProps) {
         {/* Logo */}
         <div className="p-6 border-b border-sidebar-border flex justify-center">
           <Link to="/">
-            <img src="/logo.png" alt="erybody" className="w-40 h-40 rounded-full" />
+            <img src="/logo.png" alt="erybody" className="w-20 h-20 rounded-full" />
           </Link>
         </div>
 
