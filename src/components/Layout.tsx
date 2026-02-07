@@ -26,10 +26,9 @@ export function Layout({ children }: LayoutProps) {
       {/* Left Sidebar */}
       <aside className="w-64 border-r border-border bg-sidebar-background flex flex-col">
         {/* Logo */}
-        <div className="p-6 border-b border-sidebar-border">
-          <Link to="/" className="flex items-center gap-3">
-            <img src="/logo.png" alt="erybody" className="w-10 h-10 rounded-full" />
-            <span className="text-2xl font-bold text-sidebar-foreground">erybody</span>
+        <div className="p-6 border-b border-sidebar-border flex justify-center">
+          <Link to="/">
+            <img src="/logo.png" alt="erybody" className="w-40 h-40 rounded-full" />
           </Link>
         </div>
 
@@ -60,18 +59,6 @@ export function Layout({ children }: LayoutProps) {
         {/* Login Area */}
         <div className="p-4 border-t border-sidebar-border">
           <LoginArea className="w-full" />
-        </div>
-
-        {/* Footer */}
-        <div className="p-4 text-xs text-sidebar-foreground/60 text-center">
-          <a 
-            href="https://shakespeare.diy" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="hover:text-sidebar-foreground/80 transition-colors"
-          >
-            Vibed with Shakespeare
-          </a>
         </div>
       </aside>
 
