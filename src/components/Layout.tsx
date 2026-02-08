@@ -116,7 +116,7 @@ export function Layout({ children }: LayoutProps) {
 
         {/* Mobile Bottom Navigation Tray */}
         <Drawer open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-          <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-sidebar-background border-t border-sidebar-border safe-area-inset-bottom">
+          <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-black border-t border-sidebar-border safe-area-inset-bottom">
             <div className="flex items-center justify-around p-2">
               <Link
                 to="/"
@@ -172,8 +172,8 @@ export function Layout({ children }: LayoutProps) {
             </div>
           </div>
 
-          <DrawerContent className="bg-sidebar-background max-h-[85vh]">
-            <div className="overflow-y-auto pb-safe">
+          <DrawerContent className="bg-black max-h-[85vh] border-t border-sidebar-border">
+            <div className="overflow-y-auto pb-safe bg-black">
               {/* User Info / Login */}
               <div className="p-6 border-b border-sidebar-border">
                 {user ? (
