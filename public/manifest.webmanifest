@@ -1,12 +1,14 @@
 {
-  "name": "erybody",
+  "name": "erybody - Nostr Microblogging",
   "short_name": "erybody",
-  "description": "A Nostr microblogging platform",
+  "description": "A modern Nostr microblogging platform with PWA support, Lightning zaps, and encrypted messaging",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
   "orientation": "portrait-primary",
+  "categories": ["social", "lifestyle", "productivity"],
   "icons": [
     {
       "src": "/icon-192.png",
@@ -20,5 +22,7 @@
       "type": "image/png",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
 }
