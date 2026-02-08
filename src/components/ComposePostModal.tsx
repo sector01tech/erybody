@@ -130,23 +130,23 @@ export function ComposePostModal({ open, onOpenChange }: ComposePostModalProps) 
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="sm:max-w-[600px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Compose Post</DialogTitle>
         </DialogHeader>
         
-        <div className="flex gap-4">
-          <Avatar className="w-12 h-12">
+        <div className="flex gap-3 sm:gap-4">
+          <Avatar className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
             <AvatarImage src={profileImage} alt={displayName} />
             <AvatarFallback>{displayName[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
           
-          <div className="flex-1 space-y-4">
+          <div className="flex-1 space-y-3 sm:space-y-4 min-w-0">
             <Textarea
               placeholder="What's happening?"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="min-h-[150px] resize-none border-none focus-visible:ring-0 text-lg"
+              className="min-h-[120px] sm:min-h-[150px] resize-none border-none focus-visible:ring-0 text-base sm:text-lg"
               autoFocus
             />
 
@@ -157,11 +157,11 @@ export function ComposePostModal({ open, onOpenChange }: ComposePostModalProps) 
                     <img 
                       src={url} 
                       alt={`Upload ${index + 1}`} 
-                      className="w-24 h-24 object-cover rounded-lg"
+                      className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-lg"
                     />
                     <button
                       onClick={() => setImageUrls(imageUrls.filter((_, i) => i !== index))}
-                      className="absolute top-1 right-1 bg-black/60 text-white rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="absolute top-1 right-1 bg-black/80 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity text-lg"
                     >
                       ×
                     </button>

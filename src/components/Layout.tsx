@@ -133,6 +133,16 @@ export function Layout({ children }: LayoutProps) {
         {/* Compose Post Modal */}
         <ComposePostModal open={isComposeOpen} onOpenChange={setIsComposeOpen} />
 
+        {/* Mobile Floating Action Button for Post */}
+        <Button
+          onClick={() => setIsComposeOpen(true)}
+          disabled={!user}
+          className="md:hidden fixed bottom-6 right-6 z-50 h-14 w-14 rounded-full shadow-lg"
+          size="icon"
+        >
+          <Edit className="w-6 h-6" />
+        </Button>
+
         {/* Main Content */}
         <main className="flex-1 overflow-y-auto scrollbar-hide pt-[73px] md:pt-0">
           {children}
