@@ -105,15 +105,6 @@ export function Layout({ children }: LayoutProps) {
           <NavContent />
         </aside>
 
-        {/* Mobile Header */}
-        <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-sidebar-background border-b border-sidebar-border">
-          <div className="flex items-center justify-center p-4">
-            <Link to="/">
-              <img src={logoSrc} alt="erybody" className="w-10 h-10 rounded-full" />
-            </Link>
-          </div>
-        </div>
-
         {/* Mobile Bottom Navigation Tray */}
         <Drawer open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
           <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-black border-t border-sidebar-border safe-area-inset-bottom">
@@ -224,7 +215,7 @@ export function Layout({ children }: LayoutProps) {
         <ComposePostModal open={isComposeOpen} onOpenChange={setIsComposeOpen} />
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto scrollbar-hide pt-[73px] md:pt-0 pb-[80px] md:pb-0">
+        <main className="flex-1 overflow-y-auto scrollbar-hide pb-[80px] md:pb-0">
           {children}
         </main>
       </div>
