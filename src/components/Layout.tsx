@@ -4,6 +4,7 @@ import { Home, User, Wallet, Settings, MessageSquare, Search, Radio, Bell, Bookm
 import { cn } from '@/lib/utils';
 import { LoginArea } from '@/components/auth/LoginArea';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/button';
 import { ComposePostModal } from '@/components/ComposePostModal';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -29,15 +30,18 @@ const navItems = [
 export function Layout({ children }: LayoutProps) {
   const location = useLocation();
   const { user } = useCurrentUser();
+  const { theme } = useTheme();
   const [isComposeOpen, setIsComposeOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const logoSrc = theme === 'dark' ? '/logo-light.png' : '/logo-dark.png';
 
   const NavContent = () => (
     <>
       {/* Logo */}
       <div className="p-6 border-b border-sidebar-border flex justify-center">
         <Link to="/" onClick={() => setIsMobileMenuOpen(false)}>
-          <img src="/logo.png" alt="erybody" className="w-20 h-20 rounded-full" />
+          <img src={logoSrc} alt="erybody" className="w-20 h-20 rounded-full" />
         </Link>
       </div>
 
@@ -98,7 +102,7 @@ export function Layout({ children }: LayoutProps) {
         <div className="md:hidden fixed top-0 left-0 right-0 z-40 bg-sidebar-background border-b border-sidebar-border">
           <div className="flex items-center justify-between p-4">
             <Link to="/">
-              <img src="/logo.png" alt="erybody" className="w-10 h-10 rounded-full" />
+              <img src={logoSrc} alt="erybody" className="w-10 h-10 rounded-full" />
             </Link>
             
             <div className="flex items-center gap-2">
